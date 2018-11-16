@@ -2,9 +2,7 @@
 
 A plugin which provides a drawer component that supports multiple drawers.
 
-| Demo                                        |
-| ------------------------------------------- |
-| ![Multi Drawer Demo](multi-drawer-demo.gif) |
+<img src="https://raw.githubusercontent.com/nativescript-vue/nativescript-vue-multi-drawer/master/multi-drawer-demo.gif" width="350">
 
 All drawers are optional, and can be configured individually.
 
@@ -62,3 +60,11 @@ For the available options check [the source of defaultOptions](https://github.co
 
 The component will only enable drawers that have contents in them, so if you only need a left and a right side drawer, you can just remove the top and bottom slots and it will work as expected.
 
+### Opening a drawer from code
+
+Assign a ref to the Drawer component
+```xml
+<MultiDrawer ref="drawer" />
+```
+
+And use `this.$refs.drawer.open(side)` where `side` is a string: `left`, `right`, `top` or `bottom`.
