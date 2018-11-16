@@ -35,6 +35,8 @@ Vue.use(MultiDrawer, {
 })
 ```
 
+For the available options check [the source of defaultOptions](https://github.com/nativescript-vue/nativescript-vue-multi-drawer/blob/98df9f4d342ebae12c761e45f4f23f68c15fb094/index.js#L5-L76)
+
 ```xml
 <MultiDrawer>
   <StackLayout slot="left">
