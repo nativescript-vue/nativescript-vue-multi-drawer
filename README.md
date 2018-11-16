@@ -68,3 +68,28 @@ Assign a ref to the Drawer component
 ```
 
 And use `this.$refs.drawer.open(side)` where `side` is a string: `left`, `right`, `top` or `bottom`.
+
+### Using v-model to toggle the drawer
+
+The drawer can be opened through v-model. This is useful as it allows controlling the drawer state with Vue's reactivity system. For example, the value of v-model could easily come from a vuex store.
+
+```xml
+<MultiDrawer v-model="drawerState" />
+```
+
+```js
+export default {
+  data() {
+    return {
+      drawerState: false // closed
+    }
+  },
+  
+  methods: {
+    doStuff() {
+      // do stuff
+      this.drawerState = 'left' // this will open the left drawer
+    }
+  }
+}
+```
