@@ -2,6 +2,8 @@
 
 A plugin which provides a drawer component that supports multiple drawers.
 
+![Multi Drawer Demo](multi-drawer-demo.gif)
+
 All drawers are optional, and can be configured individually.
 
 Features:
