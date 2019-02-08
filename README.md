@@ -7,18 +7,20 @@ A plugin which provides a drawer component that supports multiple drawers.
 All drawers are optional, and can be configured individually.
 
 Features:
- * drawers on left, right, top and bottom
- * swipe to open
- * swipe to close
- * tap outside to close
- * progressively dim main content as the drawer is opened
- 
- ## Quick Start
- 
- ```bash
+
+-   drawers on left, right, top and bottom
+-   swipe to open
+-   swipe to close
+-   tap outside to close
+-   progressively dim main content as the drawer is opened
+
+-   enable/disable drawers programatically
+
+## Quick Start
+
+```bash
 $ npm i --save nativescript-vue-multi-drawer
- ```
- 
+```
 
 ```diff
 // main.js
@@ -29,12 +31,13 @@ import Vue from 'nativescript-vue'
 ```
 
 Optionally set default options by passing `options` when installing the plugin:
+
 ```js
-Vue.use(MultiDrawer, { 
-  // override any option here
-  // for example enable debug mode
-  debug: true
-})
+Vue.use(MultiDrawer, {
+    // override any option here
+    // for example enable debug mode
+    debug: true,
+});
 ```
 
 For the available options check [the source of defaultOptions](https://github.com/nativescript-vue/nativescript-vue-multi-drawer/blob/98df9f4d342ebae12c761e45f4f23f68c15fb094/index.js#L5-L76)
@@ -42,18 +45,18 @@ For the available options check [the source of defaultOptions](https://github.co
 ```xml
 <MultiDrawer>
   <StackLayout slot="left">
-    <Label text="Im in the left drawer" />  
+    <Label text="Im in the left drawer" />
   </StackLayout>
   <StackLayout slot="right">
-    <Label text="Im in the right drawer" />  
+    <Label text="Im in the right drawer" />
   </StackLayout>
   <StackLayout slot="top">
-    <Label text="Im in the top drawer" />  
+    <Label text="Im in the top drawer" />
   </StackLayout>
   <StackLayout slot="bottom">
-    <Label text="Im in the bottom drawer" />  
+    <Label text="Im in the bottom drawer" />
   </StackLayout>
-  
+
   <Frame /> <!-- main content goes into the default slot -->
 </MultiDrawer>
 ```
@@ -63,6 +66,7 @@ The component will only enable drawers that have contents in them, so if you onl
 ### Opening a drawer from code
 
 Assign a ref to the Drawer component
+
 ```xml
 <MultiDrawer ref="drawer" />
 ```
@@ -79,17 +83,168 @@ The drawer can be opened through v-model. This is useful as it allows controllin
 
 ```js
 export default {
-  data() {
+    data() {
+        return {
+            drawerState: false, // closed
+        };
+    },
+
+    methods: {
+        doStuff() {
+            // do stuff
+            this.drawerState = 'left'; // this will open the left drawer
+        },
+    },
+};
+```
+
+### "Fixed" left/right sidebars
+
+Suppose your app has a navigation left side bar. On a phone, the side bar is pulled from the left, but maybe on a tablet we have enough room to keep it visible all the time.
+
+You can implement that by setting the variable `<side>.fixed` in `options`. E.g.:
+
+```xml
+<template>
+  <MultiDrawer :options="drawerOptions">
+    <StackLayout slot="left">
+      <Label text="Im in the left drawer" />
+    </StackLayout>
+    <StackLayout slot="right">
+      <Label text="Im in the right drawer" />
+    </StackLayout>
+    <StackLayout>
+      <Label text="Im in the main content" />
+    </StackLayout>
+  </MultiDrawer>
+</template>
+<script>
+export default {
+  data: {
     return {
-      drawerState: false // closed
+      drawerOptions: {
+        left: { enabled: true },
+        right: { enabled: true }
+      }
     }
   },
-  
   methods: {
-    doStuff() {
-      // do stuff
-      this.drawerState = 'left' // this will open the left drawer
+    toggleDrawers(enabled) {
+      this.drawerOptions.left.enabled = enabled;
+      this.drawerOptions.right.enabled = enabled;
     }
   }
 }
+</script>
+```
+
+#### Making the app "responsive"
+
+With this feature, we can make our app "responsive". Suppose our app has a left drawer for navigation and a right drawer for details. On a phone, both drawers are hidden. On a tablet in portrait mode, the left navigation drawer is fixed. On a tablet in landscape mode, the both left navigation and right detail drawers are fixed. We can implement these modes with the code:
+
+```xml
+<template>
+  <Page>
+    <MultiDrawer :options="drawerOptions">
+      <StackLayout slot="left" class="navigation-drawer">
+        <Label text="Im in the navigation drawer"/>
+      </StackLayout>
+      <StackLayout slot="right" class="details-drawer">
+        <Label text="Im in the details drawer"/>
+      </StackLayout>
+      <StackLayout>
+        <Label text="Im in the main content"/>
+      </StackLayout>
+    </MultiDrawer>
+  </Page>
+</template>
+
+<script >
+import { screen } from "tns-core-modules/platform";
+import Orientation from "nativescript-orientation";
+
+export default {
+  data() {
+    return {
+      navigationFixed: false,
+      detailsFixed: false
+    };
+  },
+  computed: {
+    drawerOptions() {
+      return {
+        left: {
+          width: "250",
+          fixed: this.navigationFixed
+        },
+        right: {
+          width: "250",
+          fixed: this.detailsFixed
+        }
+      };
+    }
+  },
+  methods: {
+    setupLayout() {
+      // get the screen width in DPIs.
+      const screenWidth = screen.mainScreen.widthDIPs;
+      this.navigationFixed = false;
+      this.detailsFixed = false;
+      // screen is wide enough for a fixed navigation bar
+      if (screenWidth > 700) {
+        this.navigationFixed = true;
+      }
+      // screen is wide enough for a fixed navigation bar and fixed details bar
+      if (screenWidth > 1000) {
+        this.detailsFixed = true;
+      }
+    }
+  },
+  created() {
+    this.setupLayout();
+    // detect orientation changes to rearrange the layout
+    Orientation.addOrientationApplier(() => {
+      setTimeout(this.setupLayout, 500);
+    });
+  }
+};
+</script>
+```
+
+<img src="https://raw.githubusercontent.com/tralves/nativescript-vue-multi-drawer/master/responsive-phone-demo.gif" width="350">
+<img src="https://raw.githubusercontent.com/tralves/nativescript-vue-multi-drawer/master/responsive-tablet-demo.gif" width="350">
+
+### Enabling/disabling a drawer temporarily
+
+You can temporarily enable/disable drawers programatically by setting the variable `<side>.enabled` in `options`. E.g:
+
+```xml
+<template>
+  <MultiDrawer :options="drawerOptions">
+    <StackLayout slot="left">
+      <Label text="Im in the left drawer" />
+    </StackLayout>
+    <StackLayout slot="right">
+      <Label text="Im in the right drawer" />
+    </StackLayout>
+  </MultiDrawer>
+</template>
+<script>
+export default {
+  data: {
+    return {
+      drawerOptions: {
+        left: { enabled: true },
+        right: { enabled: true }
+      }
+    }
+  },
+  methods: {
+    toggleDrawers(enabled) {
+      this.drawerOptions.left.enabled = enabled;
+      this.drawerOptions.right.enabled = enabled;
+    }
+  }
+}
+</script>
 ```
