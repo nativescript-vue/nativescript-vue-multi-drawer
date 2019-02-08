@@ -2,7 +2,7 @@
 
 A plugin which provides a drawer component that supports multiple drawers.
 
-<img src="https://raw.githubusercontent.com/nativescript-vue/nativescript-vue-multi-drawer/master/multi-drawer-demo.gif" width="350">
+<img src="https://raw.githubusercontent.com/tralves/nativescript-vue-multi-drawer/master/multi-drawer-demo.gif" width="350">
 
 All drawers are optional, and can be configured individually.
 
@@ -19,7 +19,7 @@ Features:
 ## Quick Start
 
 ```bash
-$ npm i --save nativescript-vue-multi-drawer
+$ npm i --save tralves/nativescript-vue-multi-drawer
 ```
 
 ```diff
@@ -40,7 +40,7 @@ Vue.use(MultiDrawer, {
 });
 ```
 
-For the available options check [the source of defaultOptions](https://github.com/nativescript-vue/nativescript-vue-multi-drawer/blob/98df9f4d342ebae12c761e45f4f23f68c15fb094/index.js#L5-L76)
+For the available options check [the source of defaultOptions](https://github.com/tralves/nativescript-vue-multi-drawer/blob/f33f828400297cfa96d0fd9f0fd11a0b402bb721/index.js#L5-L84)
 
 ```xml
 <MultiDrawer>
