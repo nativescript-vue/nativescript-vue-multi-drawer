@@ -1,0 +1,8 @@
+{
+  "android": {
+    "v8Flags": "--expose_gc"
+  },
+  "main": "main",
+  "name": "nativescript-vue-responsive-multi-drawer",
+  "version": "1.0.0"
+}
