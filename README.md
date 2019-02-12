@@ -247,3 +247,18 @@ export default {
 }
 </script>
 ```
+
+## Troubleshoot
+
+If adding this plugin causes errors in Android builds like `java.io.FileNotFoundException: (...)platforms/android/build-tools/sbg-bindings.txt (No such file or directory)` and runtime exceptions `Caused by: java.lang.ClassNotFoundException: Didn't find class "com.tns.NativeScriptActivity"`, add `node: "6"` as a target in `babel.config.js`, like so:
+
+```js
+module.exports = function (api) {
+  api.cache(true)
+
+  return {
+    presets: [['@babel/env', { targets: { node: "6", esmodules: true } }]],
+    plugins: ['syntax-async-functions']
+  }
+}
+```
