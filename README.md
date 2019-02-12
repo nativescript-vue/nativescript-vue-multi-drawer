@@ -12,7 +12,7 @@ Features:
  * swipe to close
  * tap outside to close
  * progressively dim main content as the drawer is opened
- * enable/disable drawers programatically
+ * enable/disable drawers programmatically
  * drawers can be fixed in the layout
 
 ## Quick Start
@@ -215,7 +215,7 @@ export default {
 
 ### Enabling/disabling a drawer temporarily
 
-You can temporarily enable/disable drawers programatically by setting the variable `<side>.enabled` in `options`. E.g:
+You can temporarily enable/disable drawers programmatically by setting the variable `<side>.enabled` in `options`. E.g:
 
 ```xml
 <template>
