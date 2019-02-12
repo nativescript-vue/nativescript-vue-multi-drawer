@@ -7,14 +7,13 @@ A plugin which provides a drawer component that supports multiple drawers.
 All drawers are optional, and can be configured individually.
 
 Features:
-
--   drawers on left, right, top and bottom
--   swipe to open
--   swipe to close
--   tap outside to close
--   progressively dim main content as the drawer is opened
-
--   enable/disable drawers programatically
+ * drawers on left, right, top and bottom
+ * swipe to open
+ * swipe to close
+ * tap outside to close
+ * progressively dim main content as the drawer is opened
+ * enable/disable drawers programatically
+ * drawers can be fixed in the layout
 
 ## Quick Start
 
@@ -34,9 +33,9 @@ Optionally set default options by passing `options` when installing the plugin:
 
 ```js
 Vue.use(MultiDrawer, {
-    // override any option here
-    // for example enable debug mode
-    debug: true,
+  // override any option here
+  // for example enable debug mode
+  debug: true,
 });
 ```
 

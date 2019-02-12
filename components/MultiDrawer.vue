@@ -6,12 +6,12 @@
         </GridLayout>
 
         <Label v-show="backdropVisible"
-              :col="computedLayout.main.col"
-              ref="backDrop"
-              opacity="0"
-              :backgroundColor="optionsInternal.backdropColor"
-              @pan="onBackDropPan"
-              @tap="close()"/>
+               :col="computedLayout.main.col"
+               ref="backDrop"
+               opacity="0"
+               :backgroundColor="optionsInternal.backdropColor"
+               @pan="onBackDropPan"
+               @tap="close()"/>
 
         <template v-for="side in computedSidesEnabled">
             <!-- Drawer Content -->
@@ -26,24 +26,24 @@
             </GridLayout>
             <!-- Open Trigger -->
             <Label v-show="computedShowSwipeOpenTrigger(side)"
-                  v-bind="computedSwipeOpenTriggerProperties(side)"
-                  @pan="onOpenTriggerPan(side, $event)"
-                  :col="computedLayout[side].col"
-                  :key="side + '-trigger'"
-                  v-if="!optionsInternal[side].fixed"/>
+                   v-bind="computedSwipeOpenTriggerProperties(side)"
+                   @pan="onOpenTriggerPan(side, $event)"
+                   :col="computedLayout[side].col"
+                   :key="side + '-trigger'"
+                   v-if="!optionsInternal[side].fixed"/>
         </template>
     </GridLayout>
 </template>
 
 <script>
-  import * as utils from 'tns-core-modules/utils/utils';
-  import mergeOptions from 'merge-options';
-  import { defaultOptions } from '../index';
+  import * as utils from 'tns-core-modules/utils/utils'
+  import mergeOptions from 'merge-options'
+  import {defaultOptions} from '../index' 
 
   export default {
     model: {
       prop: 'state',
-      event: 'stateChange'
+      event: 'stateChange',
     },
     props: {
       enabled: {
@@ -74,7 +74,7 @@
         },
         immediate: true,
         deep: true,
-      }
+      },
     },
     data() {
       return {
@@ -96,7 +96,7 @@
           bottom: {
             open: false,
             translationOffset: 0,
-          }
+          },
         },
         backdropVisible: false,
         isAnimating: false,
@@ -108,8 +108,7 @@
     computed: {
       computedSidesEnabled() {
         const validSides = Object.keys(this.sides)
-        return Object.keys(this.$slots).filter(
-          slotName =>
+        return Object.keys(this.$slots).filter(slotName =>
             validSides.includes(slotName) &&
             this.optionsInternal[slotName].enabled
         )
@@ -122,32 +121,32 @@
               : this.sides[side].translationOffset
           })`,
           ...(this.optionsInternal[side].width
-            ? { width: this.optionsInternal[side].width }
+            ? {width: this.optionsInternal[side].width}
             : {}),
           ...(this.optionsInternal[side].height
-            ? { height: this.optionsInternal[side].height }
+            ? {height: this.optionsInternal[side].height}
             : {}),
           backgroundColor: this.optionsInternal[side].backgroundColor,
           [this.optionsInternal[side].axis === 'X'
             ? 'horizontalAlignment'
-            : 'verticalAlignment']: side
+            : 'verticalAlignment']: side,
         })
       },
       computedSwipeOpenTriggerProperties() {
         return side => ({
           ...(this.optionsInternal[side].swipeOpenTriggerWidth
-            ? { width: this.optionsInternal[side].swipeOpenTriggerWidth }
+            ? {width: this.optionsInternal[side].swipeOpenTriggerWidth}
             : {}),
           ...(this.optionsInternal[side].swipeOpenTriggerHeight
-            ? { height: this.optionsInternal[side].swipeOpenTriggerHeight }
+            ? {height: this.optionsInternal[side].swipeOpenTriggerHeight}
             : {}),
           [this.optionsInternal[side].axis === 'X'
             ? 'horizontalAlignment'
             : 'verticalAlignment']: side,
           ...(this.optionsInternal.debug
-            ? { backgroundColor: 'rgba(0, 0, 255, 0.3)' }
+            ? {backgroundColor: 'rgba(0, 255, 0, 0.3)'}
             : {}),
-          ...this.optionsInternal[side].swipeOpenTriggerProperties
+          ...this.optionsInternal[side].swipeOpenTriggerProperties,
         })
       },
       computedShowSwipeOpenTrigger() {
@@ -226,14 +225,14 @@
 
         this.$refs.backDrop.nativeView.animate({
           opacity: 1,
-          duration
+          duration,
         })
         await this.$refs[`${side}Drawer`][0].nativeView.animate({
           translate: {
             x: 0,
-            y: 0
+            y: 0,
           },
-          duration
+          duration,
         })
 
         this.sides[side].open = true
@@ -259,17 +258,17 @@
         this.$refs[`${side}Drawer`][0].nativeView.animate({
           translate: {
             ...(this.optionsInternal[side].axis === 'X'
-              ? { x: this.sides[side].translationOffset }
-              : { x: 0 }),
+              ? {x: this.sides[side].translationOffset}
+              : {x: 0 }),
             ...(this.optionsInternal[side].axis === 'Y'
-              ? { y: this.sides[side].translationOffset }
-              : { y: 0 })
+              ? {y: this.sides[side].translationOffset}
+              : {y: 0 }),
           },
-          duration
+          duration,
         })
         await this.$refs.backDrop.nativeView.animate({
           opacity: 0,
-          duration
+          duration,
         })
 
         this.sides[side].open = false
@@ -428,7 +427,7 @@
             view.translateY = y
           }
         }
-      }
-    }
-  };
+      },
+    },
+  }
 </script>
