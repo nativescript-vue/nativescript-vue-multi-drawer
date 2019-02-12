@@ -139,7 +139,7 @@ export default {
 
 #### Making the app "responsive"
 
-With this feature, we can make our app "responsive". Suppose our app has a left drawer for navigation and a right drawer for details. On a phone, both drawers are hidden. On a tablet in portrait mode, the left navigation drawer is fixed. On a tablet in landscape mode, the both left navigation and right detail drawers are fixed. We can implement these modes with the code:
+With this feature, we can make our app "responsive" by adjusting the layout to the available screen real estate. Suppose our app has a left drawer for navigation and a right drawer for details. On a phone, both drawers are hidden. On a tablet in portrait mode, the left navigation drawer is fixed. On a tablet in landscape mode, the both left navigation and right detail drawers are fixed. We can implement these modes with the code:
 
 ```xml
 <template>
