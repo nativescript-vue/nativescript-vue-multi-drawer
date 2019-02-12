@@ -1,79 +1,79 @@
 <template>
-  <GridLayout :columns="computedLayout.grid.columns" :rows="computedLayout.grid.rows">
-    <!-- Main Content (default slot) -->
-    <GridLayout :col="computedLayout.main.col">
-      <slot/>
-    </GridLayout>
+    <GridLayout :columns="computedLayout.grid.columns" :rows="computedLayout.grid.rows">
+        <!-- Main Content (default slot) -->
+        <GridLayout :col="computedLayout.main.col">
+            <slot/>
+        </GridLayout>
 
-    <Label v-show="backdropVisible"
-           :col="computedLayout.main.col"
-           ref="backDrop"
-           opacity="0"
-           :backgroundColor="optionsInternal.backdropColor"
-           @pan="onBackDropPan"
-           @tap="close()"/>
+        <Label v-show="backdropVisible"
+              :col="computedLayout.main.col"
+              ref="backDrop"
+              opacity="0"
+              :backgroundColor="optionsInternal.backdropColor"
+              @pan="onBackDropPan"
+              @tap="close()"/>
 
-    <template v-for="side in computedSidesEnabled">
-      <!-- Drawer Content -->
-      <GridLayout @layoutChanged="onDrawerLayoutChange(side)"
+        <template v-for="side in computedSidesEnabled">
+            <!-- Drawer Content -->
+            <GridLayout @layoutChanged="onDrawerLayoutChange(side)"
+                        :col="computedLayout[side].col"
+                        :key="side"
+                        @tap="noop"
+                        @pan="onDrawerPan(side, $event)"
+                        :ref="`${side}Drawer`"
+                        :style="computedDrawerStyle(side)">
+                <slot :name="side"/>
+            </GridLayout>
+            <!-- Open Trigger -->
+            <Label v-show="computedShowSwipeOpenTrigger(side)"
+                  v-bind="computedSwipeOpenTriggerProperties(side)"
+                  @pan="onOpenTriggerPan(side, $event)"
                   :col="computedLayout[side].col"
-                  :key="side"
-                  @tap="noop"
-                  @pan="onDrawerPan(side, $event)"
-                  :ref="`${side}Drawer`"
-                  :style="computedDrawerStyle(side)">
-        <slot :name="side"/>
-      </GridLayout>
-      <!-- Open Trigger -->
-      <Label v-show="computedShowSwipeOpenTrigger(side)"
-             v-bind="computedSwipeOpenTriggerProperties(side)"
-             @pan="onOpenTriggerPan(side, $event)"
-             :col="computedLayout[side].col"
-             :key="side + '-trigger'"
-             v-if="!optionsInternal[side].fixed"/>
-    </template>
-  </GridLayout>
+                  :key="side + '-trigger'"
+                  v-if="!optionsInternal[side].fixed"/>
+        </template>
+    </GridLayout>
 </template>
 
 <script>
-  import * as utils from "tns-core-modules/utils/utils";
-  import mergeOptions from "merge-options";
-  import { defaultOptions } from "../index";
+  import * as utils from 'tns-core-modules/utils/utils';
+  import mergeOptions from 'merge-options';
+  import { defaultOptions } from '../index';
 
   export default {
     model: {
-      prop: "state",
-      event: "stateChange"
+      prop: 'state',
+      event: 'stateChange'
     },
     props: {
       enabled: {
         type: Boolean,
-        default: true
+        default: true,
       },
       options: {
         type: Object,
-        required: false
+        required: false,
       },
       state: {
         type: [String, Boolean],
-        default: false
-      }
+        default: false,
+      },
     },
     watch: {
       async state(side) {
         if (this.computedOpenSide !== side) {
-          await this.close();
+          await this.close()
         }
         if (side) {
-          this.open(side);
+          this.open(side)
         }
       },
       options: {
         handler(options) {
-          this.optionsInternal = mergeOptions(defaultOptions, options);
+          this.optionsInternal = mergeOptions(defaultOptions, options)
         },
         immediate: true,
-        deep: true
+        deep: true,
       }
     },
     data() {
@@ -83,36 +83,36 @@
         sides: {
           left: {
             open: false,
-            translationOffset: 0
+            translationOffset: 0,
           },
           right: {
             open: false,
-            translationOffset: 0
+            translationOffset: 0,
           },
           top: {
             open: false,
-            translationOffset: 0
+            translationOffset: 0,
           },
           bottom: {
             open: false,
-            translationOffset: 0
+            translationOffset: 0,
           }
         },
         backdropVisible: false,
         isAnimating: false,
         isPanning: false,
-        layoutColumns: "*",
-        layoutRows: "*"
-      };
+        layoutColumns: '*',
+        layoutRows: '*',
+      }
     },
     computed: {
       computedSidesEnabled() {
-        const validSides = Object.keys(this.sides);
+        const validSides = Object.keys(this.sides)
         return Object.keys(this.$slots).filter(
           slotName =>
             validSides.includes(slotName) &&
             this.optionsInternal[slotName].enabled
-        );
+        )
       },
       computedDrawerStyle() {
         return side => ({
@@ -128,10 +128,10 @@
             ? { height: this.optionsInternal[side].height }
             : {}),
           backgroundColor: this.optionsInternal[side].backgroundColor,
-          [this.optionsInternal[side].axis === "X"
-            ? "horizontalAlignment"
-            : "verticalAlignment"]: side
-        });
+          [this.optionsInternal[side].axis === 'X'
+            ? 'horizontalAlignment'
+            : 'verticalAlignment']: side
+        })
       },
       computedSwipeOpenTriggerProperties() {
         return side => ({
@@ -141,59 +141,59 @@
           ...(this.optionsInternal[side].swipeOpenTriggerHeight
             ? { height: this.optionsInternal[side].swipeOpenTriggerHeight }
             : {}),
-          [this.optionsInternal[side].axis === "X"
-            ? "horizontalAlignment"
-            : "verticalAlignment"]: side,
+          [this.optionsInternal[side].axis === 'X'
+            ? 'horizontalAlignment'
+            : 'verticalAlignment']: side,
           ...(this.optionsInternal.debug
-            ? { backgroundColor: "rgba(0, 0, 255, 0.3)" }
+            ? { backgroundColor: 'rgba(0, 0, 255, 0.3)' }
             : {}),
           ...this.optionsInternal[side].swipeOpenTriggerProperties
-        });
+        })
       },
       computedShowSwipeOpenTrigger() {
         return side => {
           if (!this.optionsInternal[side].canSwipeOpen) {
-            return false;
+            return false
           }
-          return !(this.computedOpenSide || this.isPanning || this.isAnimating);
-        };
+          return !(this.computedOpenSide || this.isPanning || this.isAnimating)
+        }
       },
       computedOpenSide() {
         return (
           this.computedSidesEnabled.find(side => this.sides[side].open) || false
-        );
+        )
       },
       computedLayout() {
-        const options = this.optionsInternal;
+        const options = this.optionsInternal
 
         let gridColumns =
-          (options.left.fixed ? "auto," : "") +
-          "*" +
-          (options.right.fixed ? ", auto" : "");
+          (options.left.fixed ? 'auto,' : '') +
+          '*' +
+          (options.right.fixed ? ', auto' : '')
 
         const layout = {
           grid: {
             columns: gridColumns,
-            rows: "*"
+            rows: '*',
           },
           main: {
-            col: options.left.fixed ? 1 : 0
+            col: options.left.fixed ? 1 : 0,
           },
           left: {
-            col: 0
+            col: 0,
           },
           right: {
-            col: (options.left.fixed ? 1 : 0) + (options.right.fixed ? 1 : 0)
+            col: (options.left.fixed ? 1 : 0) + (options.right.fixed ? 1 : 0),
           },
           top: {
-            col: options.left.fixed ? 1 : 0
+            col: options.left.fixed ? 1 : 0,
           },
           bottom: {
-            col: options.left.fixed ? 1 : 0
-          }
-        };
+            col: options.left.fixed ? 1 : 0,
+          },
+        }
 
-        return layout;
+        return layout
       }
     },
     methods: {
@@ -204,228 +204,228 @@
         if (!side) {
           if (!this.computedSidesEnabled.length) {
             throw new Error(
-              "No sides are enabled, at least one side must be enabled to open the drawer"
-            );
+              'No sides are enabled, at least one side must be enabled to open the drawer'
+            )
           }
-          side = this.computedSidesEnabled[0];
+          side = this.computedSidesEnabled[0]
         }
 
         if (!this.computedSidesEnabled.includes(side)) {
-          return;
+          return
         }
 
         if (this.isPanning || this.isAnimating) {
-          return;
+          return
         }
 
-        this.isPanning = false;
-        this.isAnimating = true;
-        this.backdropVisible = true;
+        this.isPanning = false
+        this.isAnimating = true
+        this.backdropVisible = true
 
-        const duration = this.optionsInternal[side].animation.openDuration;
+        const duration = this.optionsInternal[side].animation.openDuration
 
         this.$refs.backDrop.nativeView.animate({
           opacity: 1,
           duration
-        });
+        })
         await this.$refs[`${side}Drawer`][0].nativeView.animate({
           translate: {
             x: 0,
             y: 0
           },
           duration
-        });
+        })
 
-        this.sides[side].open = true;
-        this.isAnimating = false;
-        this.$emit("stateChange", side);
+        this.sides[side].open = true
+        this.isAnimating = false
+        this.$emit('stateChange', side)
       },
       async close(side = null) {
         if (this.isAnimating) {
-          return;
+          return
         }
         if (!side) {
-          side = this.computedOpenSide;
+          side = this.computedOpenSide
         }
         if (!side) {
-          return;
+          return
         }
 
-        this.isPanning = false;
-        this.isAnimating = true;
+        this.isPanning = false
+        this.isAnimating = true
 
-        const duration = this.optionsInternal[side].animation.closeDuration;
+        const duration = this.optionsInternal[side].animation.closeDuration
 
         this.$refs[`${side}Drawer`][0].nativeView.animate({
           translate: {
-            ...(this.optionsInternal[side].axis === "X"
+            ...(this.optionsInternal[side].axis === 'X'
               ? { x: this.sides[side].translationOffset }
               : { x: 0 }),
-            ...(this.optionsInternal[side].axis === "Y"
+            ...(this.optionsInternal[side].axis === 'Y'
               ? { y: this.sides[side].translationOffset }
               : { y: 0 })
           },
           duration
-        });
+        })
         await this.$refs.backDrop.nativeView.animate({
           opacity: 0,
           duration
-        });
+        })
 
-        this.sides[side].open = false;
-        this.backdropVisible = false;
-        this.isAnimating = false;
-        this.$emit("stateChange", false);
+        this.sides[side].open = false
+        this.backdropVisible = false
+        this.isAnimating = false
+        this.$emit('stateChange', false)
       },
       onDrawerLayoutChange(side) {
-        const view = this.$refs[`${side}Drawer`][0].nativeView;
+        const view = this.$refs[`${side}Drawer`][0].nativeView
         this.sides[side].translationOffset =
           this.optionsInternal[side].translationOffsetMultiplier *
           utils.layout.toDeviceIndependentPixels(
-            this.optionsInternal[side].axis === "X"
+            this.optionsInternal[side].axis === 'X'
               ? view.getMeasuredWidth()
               : view.getMeasuredHeight()
-          );
+          )
       },
       onBackDropPan(args) {
-        this.onDrawerPan(this.computedOpenSide, args);
+        this.onDrawerPan(this.computedOpenSide, args)
       },
       onOpenTriggerPan(side, args) {
-        this.onDrawerPan(side, args);
+        this.onDrawerPan(side, args)
       },
       onDrawerPan(side, args) {
         if (this.optionsInternal[side].fixed) {
-          return;
+          return
         }
         if ((this.isPanning && this.isPanning !== side) || this.isAnimating) {
-          return;
+          return
         }
         if (!side) {
-          return;
+          return
         }
-        const view = this.$refs[`${side}Drawer`][0].nativeView;
-        let panProgress = 0;
+        const view = this.$refs[`${side}Drawer`][0].nativeView
+        let panProgress = 0
 
         if (args.state === 1) {
           // down
-          this.isPanning = side;
+          this.isPanning = side
 
           if (!this.sides[side].open) {
-            this.$refs.backDrop.nativeView.opacity = 0;
-            this.backdropVisible = true;
+            this.$refs.backDrop.nativeView.opacity = 0
+            this.backdropVisible = true
           }
 
-          this.prevDeltaX = 0;
-          this.prevDeltaY = 0;
+          this.prevDeltaX = 0
+          this.prevDeltaY = 0
         } else if (args.state === 2) {
           // panning
 
-          if (this.optionsInternal[side].axis === "X") {
+          if (this.optionsInternal[side].axis === 'X') {
             this.constrainX(
               view,
               side,
               view.translateX + (args.deltaX - this.prevDeltaX)
-            );
+            )
             panProgress =
               Math.abs(view.translateX) /
-              Math.abs(this.sides[side].translationOffset);
+              Math.abs(this.sides[side].translationOffset)
           } else {
             this.constrainY(
               view,
               side,
               view.translateY + (args.deltaY - this.prevDeltaY)
-            );
+            )
             panProgress =
               Math.abs(view.translateY) /
-              Math.abs(this.sides[side].translationOffset);
+              Math.abs(this.sides[side].translationOffset)
           }
 
-          this.prevDeltaX = args.deltaX;
-          this.prevDeltaY = args.deltaY;
+          this.prevDeltaX = args.deltaX
+          this.prevDeltaY = args.deltaY
 
-          this.$refs.backDrop.nativeView.opacity = 1 - panProgress;
+          this.$refs.backDrop.nativeView.opacity = 1 - panProgress
         } else if (args.state === 3) {
           // up
-          this.isPanning = false;
+          this.isPanning = false
 
           if (this.computedOpenSide === side) {
             // already open
-            let distanceFromFullyOpen = 0;
-            if (this.optionsInternal[side].axis === "X") {
-              distanceFromFullyOpen = Math.abs(view.translateX);
+            let distanceFromFullyOpen = 0
+            if (this.optionsInternal[side].axis === 'X') {
+              distanceFromFullyOpen = Math.abs(view.translateX)
             } else {
-              distanceFromFullyOpen = Math.abs(view.translateY);
+              distanceFromFullyOpen = Math.abs(view.translateY)
             }
             if (
               distanceFromFullyOpen >
               this.optionsInternal[side].swipeCloseTriggerMinDrag
             ) {
-              this.close(side);
+              this.close(side)
             } else {
-              this.open(side);
+              this.open(side)
             }
           } else {
-            const offsetAbs = Math.abs(this.sides[side].translationOffset);
+            const offsetAbs = Math.abs(this.sides[side].translationOffset)
             const multiplier = this.optionsInternal[side]
-              .translationOffsetMultiplier;
-            let distanceFromEdge = 0;
-            if (this.optionsInternal[side].axis === "X") {
-              distanceFromEdge = offsetAbs - multiplier * view.translateX;
+              .translationOffsetMultiplier
+            let distanceFromEdge = 0
+            if (this.optionsInternal[side].axis === 'X') {
+              distanceFromEdge = offsetAbs - multiplier * view.translateX
             } else {
-              distanceFromEdge = offsetAbs - multiplier * view.translateY;
+              distanceFromEdge = offsetAbs - multiplier * view.translateY
             }
 
             if (
               distanceFromEdge <
               this.optionsInternal[side].swipeOpenTriggerMinDrag
             ) {
-              this.close(side);
+              this.close(side)
             } else {
-              this.open(side);
+              this.open(side)
             }
           }
 
-          this.prevDeltaX = 0;
-          this.prevDeltaY = 0;
+          this.prevDeltaX = 0
+          this.prevDeltaY = 0
         }
       },
       constrainX(view, side, x) {
-        const offset = this.sides[side].translationOffset;
+        const offset = this.sides[side].translationOffset
         if (offset < 0) {
           if (x > 0) {
-            view.translateX = 0;
+            view.translateX = 0
           } else if (this.sides[side].open && x < offset) {
-            view.translateX = offset;
+            view.translateX = offset
           } else {
-            view.translateX = x;
+            view.translateX = x
           }
         } else {
           if (x < 0) {
-            view.translateX = 0;
+            view.translateX = 0
           } else if (this.sides[side].open && x > offset) {
-            view.translateX = offset;
+            view.translateX = offset
           } else {
-            view.translateX = x;
+            view.translateX = x
           }
         }
       },
       constrainY(view, side, y) {
-        const offset = this.sides[side].translationOffset;
+        const offset = this.sides[side].translationOffset
         if (offset < 0) {
           if (y > 0) {
-            view.translateY = 0;
+            view.translateY = 0
           } else if (this.sides[side].open && y < offset) {
-            view.translateY = offset;
+            view.translateY = offset
           } else {
-            view.translateY = y;
+            view.translateY = y
           }
         } else {
           if (y < 0) {
-            view.translateY = 0;
+            view.translateY = 0
           } else if (this.sides[side].open && y > offset) {
-            view.translateY = offset;
+            view.translateY = offset
           } else {
-            view.translateY = y;
+            view.translateY = y
           }
         }
       }
