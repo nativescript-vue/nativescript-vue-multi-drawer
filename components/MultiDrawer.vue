@@ -5,6 +5,7 @@
 
         <Label v-show="backdropVisible"
                ref="backDrop"
+               iosOverflowSafeArea="true"
                opacity="0"
                :backgroundColor="optionsInternal.backdropColor"
                @pan="onBackDropPan"
