@@ -8,6 +8,7 @@
         <Label v-show="backdropVisible"
                :col="computedLayout.main.col"
                ref="backDrop"
+               iosOverflowSafeArea="true"
                opacity="0"
                :backgroundColor="optionsInternal.backdropColor"
                @pan="onBackDropPan"
