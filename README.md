@@ -2,23 +2,24 @@
 
 A plugin which provides a drawer component that supports multiple drawers.
 
-<img src="https://raw.githubusercontent.com/tralves/nativescript-vue-multi-drawer/master/multi-drawer-demo.gif" width="350">
+<img src="https://raw.githubusercontent.com/nativescript-vue/nativescript-vue-multi-drawer/master/multi-drawer-demo.gif" width="350">
 
 All drawers are optional, and can be configured individually.
 
 Features:
- * drawers on left, right, top and bottom
- * swipe to open
- * swipe to close
- * tap outside to close
- * progressively dim main content as the drawer is opened
- * enable/disable drawers programmatically
- * drawers can be fixed in the layout
+
+- drawers on left, right, top and bottom
+- swipe to open
+- swipe to close
+- tap outside to close
+- progressively dim main content as the drawer is opened
+- enable/disable drawers programmatically
+- drawers can be fixed in the layout
 
 ## Quick Start
 
 ```bash
-$ npm i --save tralves/nativescript-vue-multi-drawer
+$ npm i --save nativescript-vue-multi-drawer
 ```
 
 ```diff
@@ -36,7 +37,7 @@ Vue.use(MultiDrawer, {
   // override any option here
   // for example enable debug mode
   debug: true,
-});
+})
 ```
 
 For the available options check [the source of defaultOptions](https://github.com/tralves/nativescript-vue-multi-drawer/blob/f33f828400297cfa96d0fd9f0fd11a0b402bb721/index.js#L5-L84)
@@ -85,16 +86,16 @@ export default {
   data() {
     return {
       drawerState: false, // closed
-    };
+    }
   },
 
   methods: {
     doStuff() {
       // do stuff
-      this.drawerState = 'left'; // this will open the left drawer
+      this.drawerState = 'left' // this will open the left drawer
     },
   },
-};
+}
 ```
 
 ### "Fixed" left/right sidebars
@@ -126,7 +127,7 @@ export default {
   data() {
     return {
       drawerOptions: {
-        left: { width: "250", fixed: false } 
+        left: { width: "250", fixed: false }
       }
     };
   },
@@ -207,8 +208,8 @@ export default {
 </script>
 ```
 
-<img src="https://raw.githubusercontent.com/tralves/nativescript-vue-multi-drawer/master/responsive-phone-demo.gif" width="350">
-<img src="https://raw.githubusercontent.com/tralves/nativescript-vue-multi-drawer/master/responsive-tablet-demo.gif" width="350">
+<img src="https://raw.githubusercontent.com/nativescript-vue/nativescript-vue-multi-drawer/master/responsive-phone-demo.gif" width="350">
+<img src="https://raw.githubusercontent.com/nativescript-vue/nativescript-vue-multi-drawer/master/responsive-tablet-demo.gif" width="350">
 
 ### Enabling/disabling a drawer temporarily
 
@@ -251,11 +252,11 @@ If adding this plugin causes errors in Android builds like `java.io.FileNotFound
 
 ```js
 module.exports = function(api) {
-  api.cache(true);
+  api.cache(true)
 
   return {
-    presets: [['@babel/env', { targets: { node: '6', esmodules: true } }]],
+    presets: [['@babel/env', {targets: {node: '6', esmodules: true}}]],
     plugins: ['syntax-async-functions'],
-  };
-};
+  }
+}
 ```
