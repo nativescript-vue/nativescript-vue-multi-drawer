@@ -82,18 +82,18 @@ The drawer can be opened through v-model. This is useful as it allows controllin
 
 ```js
 export default {
-    data() {
-        return {
-            drawerState: false, // closed
-        };
-    },
+  data() {
+    return {
+      drawerState: false, // closed
+    };
+  },
 
-    methods: {
-        doStuff() {
-            // do stuff
-            this.drawerState = 'left'; // this will open the left drawer
-        },
+  methods: {
+    doStuff() {
+      // do stuff
+      this.drawerState = 'left'; // this will open the left drawer
     },
+  },
 };
 ```
 
@@ -105,35 +105,37 @@ You can implement that by setting the variable `<side>.fixed` in `options`. E.g
 
 ```xml
 <template>
-  <MultiDrawer :options="drawerOptions">
-    <StackLayout slot="left">
-      <Label text="Im in the left drawer" />
-    </StackLayout>
-    <StackLayout slot="right">
-      <Label text="Im in the right drawer" />
-    </StackLayout>
-    <StackLayout>
-      <Label text="Im in the main content" />
-    </StackLayout>
-  </MultiDrawer>
+  <Page>
+    <MultiDrawer :options="drawerOptions">
+      <StackLayout slot="left" backgroundColor="#c88">
+        <Label text="Im in the left drawer"/>
+      </StackLayout>
+      <StackLayout slot="right">
+        <Label text="Im in the right drawer"/>
+      </StackLayout>
+      <StackLayout>
+        <Label text="Im in the main content"/>
+        <Button text="Make left drawer fixed" @tap="toggleDrawer(true)"/>
+        <Button text="Make left drawer hidden" @tap="toggleDrawer(false)"/>
+      </StackLayout>
+    </MultiDrawer>
+  </Page>
 </template>
 <script>
 export default {
-  data: {
+  data() {
     return {
       drawerOptions: {
-        left: { enabled: true },
-        right: { enabled: true }
+        left: { width: "250", fixed: false } 
       }
-    }
+    };
   },
   methods: {
-    toggleDrawers(enabled) {
-      this.drawerOptions.left.enabled = enabled;
-      this.drawerOptions.right.enabled = enabled;
+    toggleDrawer(fixed) {
+      this.drawerOptions.left.fixed = fixed;
     }
   }
-}
+};
 </script>
 ```
 
@@ -143,7 +145,7 @@ With this feature, we can make our app "responsive" by adjusting the layout to t
 
 ```xml
 <template>
-  <Page>
+  <Page ref="layout" @layoutChanged="updateLayout">
     <MultiDrawer :options="drawerOptions">
       <StackLayout slot="left" class="navigation-drawer">
         <Label text="Im in the navigation drawer"/>
@@ -159,8 +161,7 @@ With this feature, we can make our app "responsive" by adjusting the layout to t
 </template>
 
 <script >
-import { screen } from "tns-core-modules/platform";
-import Orientation from "nativescript-orientation";
+import * as utils from "utils/utils";
 
 export default {
   data() {
@@ -184,9 +185,12 @@ export default {
     }
   },
   methods: {
-    setupLayout() {
+    updateLayout() {
       // get the screen width in DPIs.
-      const screenWidth = screen.mainScreen.widthDIPs;
+      const screenWidth = utils.layout.toDeviceIndependentPixels(
+        this.$refs.layout.nativeView.getMeasuredWidth()
+      );
+
       this.navigationFixed = false;
       this.detailsFixed = false;
       // screen is wide enough for a fixed navigation bar
@@ -199,13 +203,6 @@ export default {
       }
     }
   },
-  created() {
-    this.setupLayout();
-    // detect orientation changes to rearrange the layout
-    Orientation.addOrientationApplier(() => {
-      setTimeout(this.setupLayout, 500);
-    });
-  }
 };
 </script>
 ```
@@ -253,12 +250,12 @@ export default {
 If adding this plugin causes errors in Android builds like `java.io.FileNotFoundException: (...)platforms/android/build-tools/sbg-bindings.txt (No such file or directory)` and runtime exceptions `Caused by: java.lang.ClassNotFoundException: Didn't find class "com.tns.NativeScriptActivity"`, add `node: "6"` as a target in `babel.config.js`, like so:
 
 ```js
-module.exports = function (api) {
-  api.cache(true)
+module.exports = function(api) {
+  api.cache(true);
 
   return {
-    presets: [['@babel/env', { targets: { node: "6", esmodules: true } }]],
-    plugins: ['syntax-async-functions']
-  }
-}
+    presets: [['@babel/env', { targets: { node: '6', esmodules: true } }]],
+    plugins: ['syntax-async-functions'],
+  };
+};
 ```

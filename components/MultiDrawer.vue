@@ -1,9 +1,10 @@
 <template>
-    <GridLayout :columns="computedLayout.grid.columns" :rows="computedLayout.grid.rows">
+    <GridLayout :columns="computedLayout.grid.columns"
+                :rows="computedLayout.grid.rows">
         <!-- Main Content (default slot) -->
-        <GridLayout :col="computedLayout.main.col">
-            <slot/>
-        </GridLayout>
+        <ContentView :col="computedLayout.main.col">
+            <slot />
+        </ContentView>
 
         <Label v-show="backdropVisible"
                :col="computedLayout.main.col"
@@ -12,7 +13,7 @@
                opacity="0"
                :backgroundColor="optionsInternal.backdropColor"
                @pan="onBackDropPan"
-               @tap="close()"/>
+               @tap="close()" />
 
         <template v-for="side in computedSidesEnabled">
             <!-- Drawer Content -->
@@ -23,23 +24,23 @@
                         @pan="onDrawerPan(side, $event)"
                         :ref="`${side}Drawer`"
                         :style="computedDrawerStyle(side)">
-                <slot :name="side"/>
+                <slot :name="side" />
             </GridLayout>
             <!-- Open Trigger -->
             <Label v-show="computedShowSwipeOpenTrigger(side)"
                    v-bind="computedSwipeOpenTriggerProperties(side)"
                    @pan="onOpenTriggerPan(side, $event)"
                    :col="computedLayout[side].col"
-                   :key="side + '-trigger'"
-                   v-if="!optionsInternal[side].fixed"/>
+                   :key="`${side}Trigger`"
+                   v-if="!optionsInternal[side].fixed" />
         </template>
     </GridLayout>
 </template>
-
+ 
 <script>
   import * as utils from 'tns-core-modules/utils/utils'
   import mergeOptions from 'merge-options'
-  import {defaultOptions} from '../index' 
+  import {defaultOptions} from '../index'
 
   export default {
     model: {
@@ -109,7 +110,8 @@
     computed: {
       computedSidesEnabled() {
         const validSides = Object.keys(this.sides)
-        return Object.keys(this.$slots).filter(slotName =>
+        return Object.keys(this.$slots).filter(
+          slotName =>
             validSides.includes(slotName) &&
             this.optionsInternal[slotName].enabled
         )
@@ -136,10 +138,14 @@
       computedSwipeOpenTriggerProperties() {
         return side => ({
           ...(this.optionsInternal[side].swipeOpenTriggerWidth
-            ? {width: this.optionsInternal[side].swipeOpenTriggerWidth}
+            ? {
+                width: this.optionsInternal[side].swipeOpenTriggerWidth,
+              }
             : {}),
           ...(this.optionsInternal[side].swipeOpenTriggerHeight
-            ? {height: this.optionsInternal[side].swipeOpenTriggerHeight}
+            ? {
+                height: this.optionsInternal[side].swipeOpenTriggerHeight,
+              }
             : {}),
           [this.optionsInternal[side].axis === 'X'
             ? 'horizontalAlignment'
@@ -194,7 +200,7 @@
         }
 
         return layout
-      }
+      },
     },
     methods: {
       noop() {
@@ -260,10 +266,10 @@
           translate: {
             ...(this.optionsInternal[side].axis === 'X'
               ? {x: this.sides[side].translationOffset}
-              : {x: 0 }),
+              : {x: 0}),
             ...(this.optionsInternal[side].axis === 'Y'
               ? {y: this.sides[side].translationOffset}
-              : {y: 0 }),
+              : {y: 0}),
           },
           duration,
         })
