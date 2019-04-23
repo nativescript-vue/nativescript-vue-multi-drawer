@@ -1,6 +1,6 @@
 {
   "name": "nativescript-vue-multi-drawer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A NativeScript-Vue component for creating multiple side drawers",
   "main": "index.js",
   "files": [
