@@ -18,49 +18,49 @@
 </template>
 
 <script >
-  import * as utils from 'utils/utils'
+import * as utils from 'utils/utils'
 
-  export default {
-    data() {
+export default {
+  data() {
+    return {
+      navigationFixed: false,
+      detailsFixed: false,
+    }
+  },
+  computed: {
+    drawerOptions() {
       return {
-        navigationFixed: false,
-        detailsFixed: false,
+        left: {
+          width: '251',
+          fixed: this.navigationFixed,
+        },
+        right: {
+          width: '250',
+          fixed: this.detailsFixed,
+        },
       }
     },
-    computed: {
-      drawerOptions() {
-        return {
-          left: {
-            width: '251',
-            fixed: this.navigationFixed,
-          },
-          right: {
-            width: '250',
-            fixed: this.detailsFixed,
-          },
-        }
-      },
-    },
-    methods: {
-      updateLayout() {
-        // get the screen width in DPIs.
-        const screenWidth = utils.layout.toDeviceIndependentPixels(
-          this.$refs.layout.nativeView.getMeasuredWidth()
-        )
+  },
+  methods: {
+    updateLayout() {
+      // get the screen width in DPIs.
+      const screenWidth = utils.layout.toDeviceIndependentPixels(
+        this.$refs.layout.nativeView.getMeasuredWidth()
+      )
 
-        this.navigationFixed = false
-        this.detailsFixed = false
-        // screen is wide enough for a fixed navigation bar
-        if (screenWidth > 700) {
-          this.navigationFixed = true
-        }
-        // screen is wide enough for a fixed navigation bar and fixed details bar
-        if (screenWidth > 1000) {
-          this.detailsFixed = true
-        }
-      },
+      this.navigationFixed = false
+      this.detailsFixed = false
+      // screen is wide enough for a fixed navigation bar
+      if (screenWidth > 700) {
+        this.navigationFixed = true
+      }
+      // screen is wide enough for a fixed navigation bar and fixed details bar
+      if (screenWidth > 1000) {
+        this.detailsFixed = true
+      }
     },
-  }
+  },
+}
 </script>
 
 <style scoped>

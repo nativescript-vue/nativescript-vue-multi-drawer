@@ -300,13 +300,13 @@
         this.onDrawerPan(side, args)
       },
       onDrawerPan(side, args) {
+        if (!side) {
+          return
+        }
         if (this.optionsInternal[side].fixed) {
           return
         }
         if ((this.isPanning && this.isPanning !== side) || this.isAnimating) {
-          return
-        }
-        if (!side) {
           return
         }
         const view = this.$refs[`${side}Drawer`][0].nativeView
