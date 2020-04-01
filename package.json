@@ -26,7 +26,7 @@
   "author": "Igor Randjelovic",
   "license": "MIT",
   "dependencies": {
-    "merge-options": "^1.0.1"
+    "merge-options": "^2.0.0"
   },
   "peerDependencies": {
     "tns-core-modules": "*"
