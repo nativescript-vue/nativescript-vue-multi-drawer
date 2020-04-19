@@ -1,37 +1,46 @@
 <template>
-    <GridLayout>
+    <GridLayout :columns="computedLayout.grid.columns"
+                :rows="computedLayout.grid.rows">
         <!-- Main Content (default slot) -->
-        <slot/>
+        <ContentView :col="computedLayout.main.col">
+            <slot />
+        </ContentView>
 
         <Label v-show="backdropVisible"
+               :col="computedLayout.main.col"
                ref="backDrop"
                iosOverflowSafeArea="true"
                opacity="0"
                :backgroundColor="optionsInternal.backdropColor"
                @pan="onBackDropPan"
-               @tap="close()"/>
+               @tap="close()" />
 
         <template v-for="side in computedSidesEnabled">
             <!-- Drawer Content -->
             <GridLayout @layoutChanged="onDrawerLayoutChange(side)"
+                        :col="computedLayout[side].col"
+                        :key="side"
                         @tap="noop"
                         @pan="onDrawerPan(side, $event)"
                         :ref="`${side}Drawer`"
                         :style="computedDrawerStyle(side)">
-                <slot :name="side"/>
+                <slot :name="side" />
             </GridLayout>
             <!-- Open Trigger -->
             <Label v-show="computedShowSwipeOpenTrigger(side)"
                    v-bind="computedSwipeOpenTriggerProperties(side)"
-                   @pan="onOpenTriggerPan(side, $event)"/>
+                   @pan="onOpenTriggerPan(side, $event)"
+                   :col="computedLayout[side].col"
+                   :key="`${side}Trigger`"
+                   v-if="!optionsInternal[side].fixed" />
         </template>
     </GridLayout>
 </template>
-
+ 
 <script>
   import * as utils from 'tns-core-modules/utils/utils'
   import mergeOptions from 'merge-options'
-  import {defaultOptions} from "../index";
+  import {defaultOptions} from '../index'
 
   export default {
     model: {
@@ -94,20 +103,26 @@
         backdropVisible: false,
         isAnimating: false,
         isPanning: false,
+        layoutColumns: '*',
+        layoutRows: '*',
       }
     },
     computed: {
       computedSidesEnabled() {
         const validSides = Object.keys(this.sides)
-        return Object.keys(this.$slots).filter(slotName =>
-          validSides.includes(slotName)
+        return Object.keys(this.$slots).filter(
+          slotName =>
+            validSides.includes(slotName) &&
+            this.optionsInternal[slotName].enabled
         )
       },
       computedDrawerStyle() {
         return side => ({
           transform: `translate${this.optionsInternal[side].axis}(${
-            this.sides[side].open ? 0 : this.sides[side].translationOffset
-            })`,
+            this.sides[side].open || this.optionsInternal[side].fixed
+              ? 0
+              : this.sides[side].translationOffset
+          })`,
           ...(this.optionsInternal[side].width
             ? {width: this.optionsInternal[side].width}
             : {}),
@@ -123,10 +138,14 @@
       computedSwipeOpenTriggerProperties() {
         return side => ({
           ...(this.optionsInternal[side].swipeOpenTriggerWidth
-            ? {width: this.optionsInternal[side].swipeOpenTriggerWidth}
+            ? {
+                width: this.optionsInternal[side].swipeOpenTriggerWidth,
+              }
             : {}),
           ...(this.optionsInternal[side].swipeOpenTriggerHeight
-            ? {height: this.optionsInternal[side].swipeOpenTriggerHeight}
+            ? {
+                height: this.optionsInternal[side].swipeOpenTriggerHeight,
+              }
             : {}),
           [this.optionsInternal[side].axis === 'X'
             ? 'horizontalAlignment'
@@ -149,6 +168,38 @@
         return (
           this.computedSidesEnabled.find(side => this.sides[side].open) || false
         )
+      },
+      computedLayout() {
+        const options = this.optionsInternal
+
+        let gridColumns =
+          (options.left.fixed ? 'auto,' : '') +
+          '*' +
+          (options.right.fixed ? ', auto' : '')
+
+        const layout = {
+          grid: {
+            columns: gridColumns,
+            rows: '*',
+          },
+          main: {
+            col: options.left.fixed ? 1 : 0,
+          },
+          left: {
+            col: 0,
+          },
+          right: {
+            col: (options.left.fixed ? 1 : 0) + (options.right.fixed ? 1 : 0),
+          },
+          top: {
+            col: options.left.fixed ? 1 : 0,
+          },
+          bottom: {
+            col: options.left.fixed ? 1 : 0,
+          },
+        }
+
+        return layout
       },
     },
     methods: {
@@ -249,10 +300,13 @@
         this.onDrawerPan(side, args)
       },
       onDrawerPan(side, args) {
-        if ((this.isPanning && this.isPanning !== side) || this.isAnimating) {
+        if (!side) {
           return
         }
-        if (!side) {
+        if (this.optionsInternal[side].fixed) {
+          return
+        }
+        if ((this.isPanning && this.isPanning !== side) || this.isAnimating) {
           return
         }
         const view = this.$refs[`${side}Drawer`][0].nativeView

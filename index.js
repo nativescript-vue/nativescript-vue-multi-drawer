@@ -8,6 +8,8 @@ export let defaultOptions = {
   left: {
     width: '70%',
     height: null,
+    enabled: true,
+    fixed: false,
     backgroundColor: '#ffffff',
     canSwipeOpen: true,
     swipeOpenTriggerWidth: 30,
@@ -25,6 +27,8 @@ export let defaultOptions = {
   right: {
     width: '70%',
     height: null,
+    enabled: true,
+    fixed: false,
     backgroundColor: '#ffffff',
     canSwipeOpen: true,
     swipeOpenTriggerWidth: 30,
@@ -42,6 +46,8 @@ export let defaultOptions = {
   top: {
     width: null,
     height: '40%',
+    enabled: true,
+    fixed: false,
     backgroundColor: '#ffffff',
     canSwipeOpen: true,
     swipeOpenTriggerWidth: null,
@@ -59,6 +65,8 @@ export let defaultOptions = {
   bottom: {
     width: null,
     height: '40%',
+    enabled: true,
+    fixed: false,
     backgroundColor: '#ffffff',
     canSwipeOpen: true,
     swipeOpenTriggerWidth: null,
