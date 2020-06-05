@@ -118,6 +118,10 @@
           [this.optionsInternal[side].axis === 'X'
             ? 'horizontalAlignment'
             : 'verticalAlignment']: side,
+          borderTopLeftRadius: this.optionsInternal[side].borderTopLeftRadius || 0,
+          borderTopRightRadius: this.optionsInternal[side].borderTopRightRadius || 0,
+          borderBottomLeftRadius: this.optionsInternal[side].borderBottomLeftRadius || 0,
+          borderBottomRightRadius: this.optionsInternal[side].borderBottomRightRadius || 0,
         })
       },
       computedSwipeOpenTriggerProperties() {

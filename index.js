@@ -21,6 +21,8 @@ export let defaultOptions = {
     },
     translationOffsetMultiplier: -1,
     axis: 'X',
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
   },
   right: {
     width: '70%',
@@ -38,6 +40,8 @@ export let defaultOptions = {
     },
     translationOffsetMultiplier: 1,
     axis: 'X',
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
   },
   top: {
     width: null,
@@ -55,6 +59,8 @@ export let defaultOptions = {
     },
     translationOffsetMultiplier: -1,
     axis: 'Y',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
   bottom: {
     width: null,
@@ -72,6 +78,8 @@ export let defaultOptions = {
     },
     translationOffsetMultiplier: 1,
     axis: 'Y',
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
 }
 
