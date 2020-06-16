@@ -234,12 +234,13 @@
       },
       onDrawerLayoutChange(side) {
         const view = this.$refs[`${side}Drawer`][0].nativeView
+        const safeAreaInsets = view.getSafeAreaInsets()
         this.sides[side].translationOffset =
           this.optionsInternal[side].translationOffsetMultiplier *
           utils.layout.toDeviceIndependentPixels(
             this.optionsInternal[side].axis === 'X'
-              ? view.getMeasuredWidth()
-              : view.getMeasuredHeight()
+              ? (view.getMeasuredWidth() + safeAreaInsets.left + safeAreaInsets.right)
+              : (view.getMeasuredHeight() + safeAreaInsets.bottom + safeAreaInsets.top)
           )
       },
       onBackDropPan(args) {
