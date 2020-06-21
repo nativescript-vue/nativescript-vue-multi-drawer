@@ -1,5 +1,5 @@
 <template>
-    <GridLayout>
+    <GridLayout iosOverflowSafeArea="true">
         <!-- Main Content (default slot) -->
         <slot/>
 
