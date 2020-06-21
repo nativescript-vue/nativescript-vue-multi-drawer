@@ -1,5 +1,5 @@
 <template>
-    <GridLayout>
+    <GridLayout iosOverflowSafeArea="true">
         <!-- Main Content (default slot) -->
         <slot/>
 
@@ -7,6 +7,7 @@
                ref="backDrop"
                iosOverflowSafeArea="true"
                opacity="0"
+               iosOverflowSafeArea="true"
                :backgroundColor="optionsInternal.backdropColor"
                @pan="onBackDropPan"
                @tap="close()"/>
