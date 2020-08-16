@@ -17,19 +17,21 @@
                         @tap="noop"
                         @pan="onDrawerPan(side, $event)"
                         :ref="`${side}Drawer`"
-                        :style="computedDrawerStyle(side)">
+                        :style="computedDrawerStyle(side)"
+                        :key="'grid_'+side">
                 <slot :name="side"/>
             </GridLayout>
             <!-- Open Trigger -->
             <Label v-show="computedShowSwipeOpenTrigger(side)"
                    v-bind="computedSwipeOpenTriggerProperties(side)"
-                   @pan="onOpenTriggerPan(side, $event)"/>
+                   @pan="onOpenTriggerPan(side, $event)"
+                   :key="'label_'+side"/>
         </template>
     </GridLayout>
 </template>
 
 <script>
-  import * as utils from 'tns-core-modules/utils/utils'
+  import {layout} from 'tns-core-modules/utils/utils'
   import mergeOptions from 'merge-options'
   import {defaultOptions} from "../index";
 
@@ -236,7 +238,7 @@
         const view = this.$refs[`${side}Drawer`][0].nativeView
         this.sides[side].translationOffset =
           this.optionsInternal[side].translationOffsetMultiplier *
-          utils.layout.toDeviceIndependentPixels(
+          layout.toDeviceIndependentPixels(
             this.optionsInternal[side].axis === 'X'
               ? view.getMeasuredWidth()
               : view.getMeasuredHeight()
