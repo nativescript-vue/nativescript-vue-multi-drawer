@@ -29,7 +29,7 @@
 </template>
 
 <script>
-  import * as utils from 'tns-core-modules/utils/utils'
+  import {Utils} from "@nativescript/core"
   import mergeOptions from 'merge-options'
   import {defaultOptions} from "../index";
 
@@ -236,7 +236,7 @@
         const view = this.$refs[`${side}Drawer`][0].nativeView
         this.sides[side].translationOffset =
           this.optionsInternal[side].translationOffsetMultiplier *
-          utils.layout.toDeviceIndependentPixels(
+          Utils.layout.toDeviceIndependentPixels(
             this.optionsInternal[side].axis === 'X'
               ? view.getMeasuredWidth()
               : view.getMeasuredHeight()
